@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Grid from "./components/Grid";
+import { CirclePicker } from "react-color";
+
+const makeArray = size => {
+  return Array(size).fill(Array(size).fill("#61DAF9"));
+};
 
 function App() {
+  const [selected, setSelected] = useState("");
+  const [colors, setColors] = useState(makeArray(5));
+
+  const update = (x, y) => {
+    console.log('colorx', x, 'colory', y)
+    const newArray = [...colors].map((row, index) => {
+      if (index === y) {
+        row.splice(x, 1, selected);
+      }
+      return row;
+    });
+    setColors(newArray);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Grid colors={colors} update={update} />
+      <CirclePicker
+        color={selected}
+        onChangeComplete={color => setSelected(color.hex)}
+      />
     </div>
   );
 }
